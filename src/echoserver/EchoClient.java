@@ -13,31 +13,34 @@ public class EchoClient {
         } else {
             server = args[0];
         }
-
+// System.out.println("hello? is anyone there?");
         try {
-            System.out.println("started running client");
+            // System.out.println("started running client");
             Socket socket = new Socket(server, portNumber);
             OutputStream output = socket.getOutputStream();
+            InputStream input = socket.getInputStream();
             int out;
+            int curr;
             while ((out = System.in.read()) != -1) {
                 output.write(out);
+                if ((curr = input.read()) != -1) {
+                    System.out.write(curr);
+                }
+                
             }
-
-            InputStream input = socket.getInputStream();
-            int curr;
-            while ((curr = input.read()) != -1) {
-                System.out.write(curr);
-            }
-
+            // System.out.println("Reached end of input");
+            output.flush();
+            input.close();        
+            output.close();
             socket.close();
-            
+
         } catch (ConnectException ce) {
-      System.out.println("We were unable to connect to " + server);
-      System.out.println("You should make sure the server is running.");
-    } catch (IOException ioe) {
-      System.out.println("We caught an unexpected exception");
-      System.err.println(ioe);
-    }
-        
+            System.out.println("We were unable to connect to " + server);
+            System.out.println("You should make sure the server is running.");
+        } catch (IOException ioe) {
+            System.out.println("We caught an unexpected exception");
+            System.err.println(ioe);
+        }
+
     }
 }
