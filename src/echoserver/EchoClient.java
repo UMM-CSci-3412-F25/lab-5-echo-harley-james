@@ -2,9 +2,11 @@ package echoserver;
 
 import java.io.*;
 import java.net.*;
+import java.util.logging.*;
 
 public class EchoClient {
     public static final int portNumber = 6013;
+    private static final Logger LOGGER = Logger.getLogger(EchoClient.class.getName());
 
     public static void main(String[] args) throws IOException {
         String server;
@@ -22,17 +24,17 @@ public class EchoClient {
             int out;
             int curr;
             while ((out = System.in.read()) != -1) {
+                LOGGER.log(Level.FINE, "" + out);
                 output.write(out);
-                if ((curr = input.read()) != -1) {
-                    System.out.write(curr);
-                }
-                
+                curr = input.read();
+                System.out.write(curr);
             }
+            System.out.flush();
+            LOGGER.log(Level.FINE, "Reached end of input");
             // System.out.println("Reached end of input");
             output.flush();
-            input.close();        
-            output.close();
-            socket.close();
+            socket.shutdownOutput();
+            socket.close();        
 
         } catch (ConnectException ce) {
             System.out.println("We were unable to connect to " + server);

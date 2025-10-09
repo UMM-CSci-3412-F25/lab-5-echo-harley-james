@@ -18,11 +18,13 @@ public class EchoServer {
                 InputStream in = client.getInputStream();
                 int curr;
                 while ((curr = in.read()) != -1) {
-                    System.out.println("received " + curr);
+                    // System.out.println("received " + curr);
                     out.write(curr);
+                    out.flush();
                 }
                 out.flush();
-                client.close();
+                client.shutdownOutput();
+                System.out.println("Disconnecting");
             }
         } catch (IOException ioe) {
       System.out.println("We caught an unexpected exception");
